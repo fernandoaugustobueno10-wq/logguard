@@ -1,94 +1,130 @@
 
-# LogGuard
+# 🛡️ LogGuard
 
-**Analisador de logs de segurança com dashboard interativo, desenvolvido em Python.**
+### Analisador de Logs de Segurança com Python, SQLite e Streamlit
 
-O LogGuard é um projeto pessoal voltado à análise de eventos de segurança. A aplicação processa arquivos CSV, identifica padrões suspeitos, classifica alertas por severidade e permite consultar um histórico armazenado em SQLite.
+O **LogGuard** é uma aplicação desenvolvida em Python para análise de logs de segurança, identificação de comportamentos suspeitos e visualização de alertas por meio de um dashboard interativo.
 
-Além da execução pelo terminal, o projeto possui um dashboard desenvolvido com Streamlit, permitindo visualizar indicadores, gráficos e filtros.
+O projeto surgiu como uma iniciativa pessoal para aprofundar meus conhecimentos em desenvolvimento de software e segurança da informação, aplicando conceitos de processamento de dados, detecção de anomalias, persistência, testes automatizados e organização de código.
 
-O objetivo é aplicar conhecimentos de desenvolvimento de software, algoritmos, segurança da informação, persistência de dados e testes automatizados em uma ferramenta prática.
+A ferramenta permite analisar arquivos CSV, identificar padrões de falhas de autenticação e erros HTTP, classificar alertas conforme a severidade e armazenar os resultados em um banco de dados SQLite.
 
-## Funcionalidades
+Além da execução pelo terminal, o LogGuard possui uma interface web desenvolvida com Streamlit, permitindo acompanhar indicadores, consultar históricos e analisar novos arquivos.
 
-### Análise de segurança
+## 📸 Dashboard
 
-- Leitura de arquivos CSV.
+![Dashboard do LogGuard](docs/images/dashboard.png)
+
+O dashboard apresenta uma visão geral dos alertas identificados, incluindo indicadores de severidade, endereços IP distintos, gráficos de distribuição e evolução temporal, além de uma tabela com o histórico das ocorrências.
+
+A interface também permite filtrar os resultados por endereço IP, tipo de alerta, severidade e período.
+
+## 🚀 Funcionalidades
+
+### Análise de logs
+
+- Leitura e processamento de arquivos CSV.
+- Validação das colunas obrigatórias.
 - Validação de endereços IPv4 e IPv6.
-- Validação de datas e horários com fuso horário.
-- Detecção de tentativas repetidas de login malsucedidas.
-- Detecção de picos de respostas HTTP 401, 403 e 404.
-- Classificação de alertas por severidade.
-- Identificação de episódios distintos de atividade suspeita.
+- Validação de datas com fuso horário.
+- Normalização de horários para UTC.
+- Validação de códigos de resposta HTTP.
 - Processamento de eventos fora de ordem.
+- Tratamento de arquivos inválidos.
 
-### Persistência
+### Detecção de comportamentos suspeitos
 
-- Armazenamento de alertas em SQLite.
-- Prevenção de registros duplicados.
-- Consulta do histórico.
-- Filtro por severidade.
+- Identificação de múltiplas tentativas malsucedidas de login.
+- Detecção de concentrações de respostas HTTP 401, 403 e 404.
+- Agrupamento de eventos por endereço IP.
+- Análise de eventos em janelas de tempo.
+- Identificação de episódios distintos de atividade suspeita.
+- Classificação de alertas em severidade baixa, média e alta.
+
+### Histórico de alertas
+
+- Armazenamento local utilizando SQLite.
+- Controle de duplicidade.
 - Consultas SQL parametrizadas.
-- Gravação transacional.
+- Gravações transacionais.
+- Consulta de alertas anteriores.
+- Filtros por severidade.
+- Registro dos horários de ocorrência e armazenamento.
 
-### Dashboard
+### Dashboard interativo
 
 - Indicadores de alertas.
-- Contagem de alertas por severidade.
+- Quantidade de ocorrências por severidade.
 - Número de endereços IP distintos.
-- Gráficos de severidade e evolução temporal.
-- Filtros por IP, tipo, período e severidade.
+- Gráficos de distribuição de alertas.
+- Visualização da evolução temporal.
 - Tabela de histórico.
-- Importação e análise de arquivos CSV pelo navegador.
+- Filtros por IP, tipo, severidade e período.
+- Importação de arquivos CSV diretamente pelo navegador.
+- Integração com o banco SQLite local.
 
-## Tecnologias
+## 🛠️ Tecnologias utilizadas
 
 | Tecnologia | Aplicação |
 |---|---|
 | Python 3.13 | Linguagem principal |
-| Streamlit | Interface web |
-| SQLite | Armazenamento local |
+| Streamlit | Dashboard interativo |
+| SQLite | Persistência de alertas |
+| CSV | Formato de entrada dos eventos |
 | unittest | Testes automatizados |
-| Git | Versionamento |
+| Git | Controle de versão |
+| GitHub | Hospedagem do código |
 | GitHub Actions | Integração contínua |
 
-A análise e a persistência utilizam bibliotecas da própria linguagem Python. O Streamlit é a principal dependência externa do projeto.
+O projeto utiliza bibliotecas nativas do Python para processamento, análise e persistência. O Streamlit é utilizado para a interface web.
 
-## Arquitetura
+## 🏗️ Arquitetura
 
-O LogGuard foi dividido em módulos com responsabilidades específicas:
+O LogGuard foi organizado em módulos com responsabilidades específicas.
 
-- `main.py`: interface de linha de comando.
-- `dashboard.py`: interface web com Streamlit.
-- `logguard/analisador.py`: leitura de CSV, validação de eventos e detecção de alertas.
-- `logguard/repositorio.py`: persistência e consultas SQLite.
-- `logguard/painel.py`: filtros e preparação dos indicadores do dashboard.
-- `tests/`: testes automatizados.
-- `exemplos/`: arquivos CSV fictícios para demonstração.
+| Arquivo | Responsabilidade |
+|---|---|
+| `main.py` | Execução pelo terminal |
+| `dashboard.py` | Interface web com Streamlit |
+| `logguard/analisador.py` | Leitura, validação e detecção de alertas |
+| `logguard/repositorio.py` | Persistência e consultas SQLite |
+| `logguard/painel.py` | Filtros, indicadores e preparação dos gráficos |
+| `tests/` | Testes automatizados |
+| `exemplos/` | Arquivos CSV de demonstração |
 
-As interfaces de terminal e navegador reutilizam o mesmo analisador e o mesmo repositório SQLite.
+Essa divisão permite reutilizar as regras de análise tanto na interface de terminal quanto no dashboard, evitando a duplicação da lógica de negócio.
 
-## Estrutura do projeto
+## 📁 Estrutura do projeto
 
 ```text
 logguard/
+│
 ├── .github/
 │   └── workflows/
 │       └── tests.yml
+│
 ├── .streamlit/
 │   └── config.toml
+│
+├── docs/
+│   └── images/
+│       └── dashboard.png
+│
 ├── exemplos/
 │   ├── eventos.csv
 │   └── eventos_http.csv
+│
 ├── logguard/
 │   ├── __init__.py
 │   ├── analisador.py
 │   ├── painel.py
 │   └── repositorio.py
+│
 ├── tests/
 │   ├── test_analisador.py
 │   ├── test_painel.py
 │   └── test_repositorio.py
+│
 ├── .gitignore
 ├── dashboard.py
 ├── main.py
@@ -96,19 +132,21 @@ logguard/
 └── requirements.txt
 ```
 
-O diretório `dados/` e o ambiente virtual `.venv/` são locais e não devem ser enviados ao repositório.
+O banco SQLite é criado localmente no diretório `dados/`, que não deve ser enviado ao GitHub.
 
-## Requisitos
+## ⚙️ Instalação
+
+### Pré-requisitos
 
 - Python 3.13.
-- Git, para clonar o projeto.
-- Navegador moderno, para acessar o dashboard.
+- Git.
+- Navegador atualizado.
 
-O LogGuard não exige Docker, WSL ou servidor de banco de dados.
+Não é necessário utilizar Docker, WSL ou um servidor externo de banco de dados.
 
-## Instalação no Windows
+### 1. Clonar o repositório
 
-### 1. Clonar o projeto
+Abra o PowerShell e execute:
 
 ```powershell
 git clone https://github.com/fernandoaugustobueno10-wq/logguard.git
@@ -116,7 +154,7 @@ git clone https://github.com/fernandoaugustobueno10-wq/logguard.git
 cd logguard
 ```
 
-### 2. Criar um ambiente virtual
+### 2. Criar o ambiente virtual
 
 ```powershell
 py -3.13 -m venv .venv
@@ -128,49 +166,51 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-O ambiente virtual mantém as dependências do projeto separadas das demais instalações Python.
+As dependências ficam isoladas no ambiente virtual do projeto.
 
-## Executar o dashboard
+## 🖥️ Executando o dashboard
 
-No diretório do projeto:
+No diretório principal:
 
 ```powershell
 .\.venv\Scripts\python.exe -m streamlit run dashboard.py
 ```
 
-Depois, acesse:
+Após iniciar o servidor, acesse:
 
-http://127.0.0.1:8501
+**http://127.0.0.1:8501**
 
-O dashboard será executado localmente no computador.
+O dashboard será aberto no navegador.
 
-Para interromper o servidor, pressione `Ctrl+C` no terminal.
+Para encerrar a aplicação, pressione `Ctrl+C` no terminal.
 
-## Analisar arquivos pelo dashboard
+### Importando arquivos CSV
 
-1. Abra o dashboard no navegador.
+1. Abra o dashboard.
 2. Expanda a seção de importação.
-3. Selecione um arquivo CSV válido.
+3. Selecione um arquivo CSV.
 4. Clique em **Analisar e salvar alertas**.
-5. Consulte os indicadores, os gráficos e o histórico.
+5. Consulte os resultados pelos indicadores, gráficos e histórico.
 
-O processamento utiliza a mesma lógica de detecção da aplicação de terminal.
+Os alertas identificados são armazenados no SQLite local.
 
-## Executar pelo terminal
+## 💻 Executando pelo terminal
 
-### Análise sem armazenamento
+Também é possível utilizar o LogGuard sem abrir o dashboard.
+
+### Analisar falhas de login
 
 ```powershell
 .\.venv\Scripts\python.exe main.py exemplos\eventos.csv
 ```
 
-### Análise com armazenamento
+### Analisar e armazenar alertas
 
 ```powershell
 .\.venv\Scripts\python.exe main.py exemplos\eventos.csv --salvar
 ```
 
-### Analisar erros HTTP
+### Analisar eventos HTTP
 
 ```powershell
 .\.venv\Scripts\python.exe main.py exemplos\eventos_http.csv --salvar
@@ -182,26 +222,36 @@ O processamento utiliza a mesma lógica de detecção da aplicação de terminal
 .\.venv\Scripts\python.exe main.py --historico
 ```
 
-### Filtrar o histórico por severidade
+### Consultar apenas alertas de alta severidade
 
 ```powershell
-.\.venv\Scripts\python.exe main.py --historico --severidade ALTA --limite 10
+.\.venv\Scripts\python.exe main.py --historico --severidade ALTA
 ```
 
-O banco padrão é criado em `dados/logguard.sqlite3`.
+### Limitar a quantidade de resultados
 
-## Formato do CSV
+```powershell
+.\.venv\Scripts\python.exe main.py --historico --limite 10
+```
 
-O arquivo deve conter exatamente as colunas:
+O banco padrão é armazenado em:
 
-| Coluna | Exemplo |
-|---|---|
-| timestamp | 2026-11-22T12:00:00Z |
-| ip | 192.0.2.10 |
-| evento | login_falha |
-| status | 401 |
+```text
+dados/logguard.sqlite3
+```
 
-Exemplo de arquivo:
+## 📄 Formato dos arquivos CSV
+
+Os arquivos devem apresentar exatamente quatro colunas:
+
+| Coluna | Descrição | Exemplo |
+|---|---|---|
+| `timestamp` | Data e horário do evento | `2026-11-22T12:00:00Z` |
+| `ip` | Endereço IP | `192.0.2.10` |
+| `evento` | Tipo de ocorrência | `login_falha` |
+| `status` | Código HTTP | `401` |
+
+Exemplo:
 
 ```csv
 timestamp,ip,evento,status
@@ -212,109 +262,188 @@ timestamp,ip,evento,status
 2026-11-22T12:04:00Z,192.0.2.10,login_falha,401
 ```
 
-Os tipos de evento atualmente aceitos são:
+Os eventos aceitos atualmente são:
 
 - `login_falha`
 - `login_sucesso`
 - `requisicao`
 
-Os endereços IP utilizados nos exemplos são reservados para documentação.
+Os endereços IP utilizados nos exemplos são reservados para documentação, não correspondendo a usuários reais.
 
-## Regras de detecção
+## 🔎 Regras de detecção
 
-### Falhas repetidas de login
+### 1. Falhas repetidas de autenticação
 
-Identifica cinco ou mais eventos `login_falha`, com resposta HTTP 401 ou 403, originados do mesmo endereço IP em uma janela de dez minutos.
+O LogGuard identifica comportamentos suspeitos quando um mesmo endereço IP apresenta pelo menos cinco eventos de falha de login, com status HTTP 401 ou 403, dentro de uma janela de dez minutos.
 
-A severidade é considerada alta quando o episódio acontece em até dois minutos; caso contrário, é média.
+A classificação é:
 
-### Picos HTTP
+| Condição | Severidade |
+|---|---|
+| Cinco falhas em até dois minutos | ALTA |
+| Cinco falhas em mais de dois e até dez minutos | MÉDIA |
 
-Identifica cinco ou mais eventos `requisicao`, com o mesmo status HTTP suspeito e provenientes do mesmo IP, em uma janela de cinco minutos.
+O sistema permite identificar episódios distintos provenientes do mesmo endereço IP.
 
-São analisados os códigos:
+### 2. Picos de erros HTTP
 
-- `401`: não autorizado.
-- `403`: acesso proibido.
-- `404`: recurso não encontrado.
+Também são analisadas concentrações de respostas HTTP 401, 403 e 404.
 
-A severidade depende do código HTTP e da duração do episódio.
+O limite padrão é de cinco ocorrências, com o mesmo endereço IP e código de status, em uma janela de cinco minutos.
 
-Os parâmetros são heurísticos e foram definidos para demonstrar o funcionamento do projeto. Um alerta não representa confirmação de ataque.
+| Código HTTP | Condição | Severidade |
+|---|---|---|
+| 401 ou 403 | Cinco ocorrências em até um minuto | ALTA |
+| 401 ou 403 | Cinco ocorrências em mais de um e até cinco minutos | MÉDIA |
+| 404 | Cinco ocorrências em até um minuto | MÉDIA |
+| 404 | Cinco ocorrências em mais de um e até cinco minutos | BAIXA |
 
-## Testes automatizados
+As regras utilizam limites demonstrativos e podem gerar falsos positivos.
 
-O LogGuard utiliza `unittest`.
+**Um alerta representa um indício para investigação, não a confirmação de um ataque.**
 
-Para executar todos os testes:
+## 🗄️ Persistência com SQLite
+
+O armazenamento permite consultar alertas mesmo depois de encerrar a aplicação.
+
+Cada alerta possui informações como:
+
+- Tipo.
+- Severidade.
+- Endereço IP.
+- Código HTTP, quando aplicável.
+- Quantidade de eventos.
+- Horário inicial.
+- Horário final.
+- Data de armazenamento.
+
+Para evitar duplicações, o projeto utiliza uma chave SHA-256 calculada a partir dos dados do alerta.
+
+Quando o mesmo alerta é processado novamente, ele não é inserido outra vez no banco.
+
+As operações utilizam consultas parametrizadas e transações SQLite.
+
+## 🧪 Testes automatizados
+
+O LogGuard possui **39 testes automatizados**, organizados em três módulos:
+
+| Módulo | Testes | Finalidade |
+|---|---:|---|
+| `test_analisador.py` | 20 | Validação de CSV e regras de detecção |
+| `test_repositorio.py` | 10 | Persistência, consultas e duplicidade |
+| `test_painel.py` | 9 | Filtros, indicadores e dados dos gráficos |
+| **Total** | **39** | |
+
+Para executar a suíte completa:
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-A versão 0.4 possui 39 testes automatizados, distribuídos entre:
+Resultado esperado:
 
-- Validação e análise de eventos.
-- Regras de detecção.
-- Persistência SQLite.
-- Controle de duplicidade.
-- Filtros e indicadores do dashboard.
+```text
+Ran 39 tests
 
-Os testes também serão executados automaticamente pelo GitHub Actions.
+OK
+```
 
-## Segurança
+Os testes abrangem cenários válidos e inválidos, incluindo endereços IP incorretos, datas sem fuso horário, parâmetros inválidos, eventos fora de ordem, duplicidade de registros e filtros do dashboard.
 
-O projeto inclui medidas de validação e proteção:
+## 🔄 Integração contínua
 
-- Limite de 5 MB para os arquivos CSV.
+O projeto utiliza **GitHub Actions** para executar verificações automáticas a cada push ou pull request para a branch principal.
+
+O workflow realiza:
+
+1. Preparação do Python 3.13.
+2. Instalação das dependências.
+3. Verificação de sintaxe dos arquivos Python.
+4. Execução dos testes automatizados.
+5. Execução dos exemplos de análise.
+6. Verificação básica de armazenamento e consulta SQLite.
+
+As verificações ajudam a identificar regressões antes que novas alterações sejam incorporadas.
+
+[Visualizar GitHub Actions](https://github.com/fernandoaugustobueno10-wq/logguard/actions)
+
+## 🔐 Segurança
+
+O LogGuard foi desenvolvido considerando princípios de validação de entradas e tratamento seguro de dados.
+
+Entre as medidas implementadas estão:
+
+- Validação dos arquivos CSV.
+- Limite de 5 MB por arquivo.
 - Limite de 20.000 eventos por análise.
-- Validação de campos e formatos.
+- Validação dos campos obrigatórios.
 - Validação de endereços IP.
-- Tratamento de arquivos inválidos.
+- Validação de códigos HTTP.
+- Normalização de horários.
 - Consultas SQL parametrizadas.
-- Transações no SQLite.
-- Prevenção de duplicidade de alertas.
-- Processamento temporário de arquivos enviados.
+- Transações para gravações no banco.
+- Controle de registros duplicados.
+- Tratamento de erros de leitura e armazenamento.
+- Processamento temporário dos arquivos importados.
 - Execução local do dashboard.
-- Proteção contra publicação acidental do banco e de configurações sensíveis por meio do `.gitignore`.
+- Exclusão do banco de dados e do ambiente virtual do versionamento.
 
-Os arquivos enviados devem ser considerados dados não confiáveis.
+Os arquivos analisados devem ser tratados como dados não confiáveis.
 
-**Atenção:** registros reais podem conter dados pessoais e informações sensíveis. Utilize somente arquivos autorizados e não publique logs de produção ou bancos de dados locais no GitHub.
+### Privacidade
 
-## Limitações
+Arquivos de log reais podem conter endereços IP e outras informações pessoais ou sensíveis.
 
-A versão atual:
+Por esse motivo:
+
+- Não publique arquivos reais de produção no GitHub.
+- Utilize dados fictícios nas demonstrações.
+- Analise somente arquivos que você tenha autorização para processar.
+- Mantenha o banco SQLite protegido no ambiente local.
+- Não exponha o dashboard diretamente à internet.
+
+O LogGuard é uma ferramenta educacional em desenvolvimento e não substitui sistemas profissionais de monitoramento de segurança.
+
+## ⚠️ Limitações atuais
+
+A aplicação ainda possui algumas limitações:
 
 - Aceita somente o formato CSV documentado.
 - Não interpreta diretamente logs brutos de Apache, Nginx ou Windows.
-- Não realiza monitoramento contínuo.
-- Não substitui um SIEM profissional.
-- Não confirma automaticamente a ocorrência de ataques.
-- Exibe no dashboard até 1.000 registros recentes do histórico.
+- Não realiza monitoramento contínuo em tempo real.
 - Não possui autenticação de usuários.
-- Foi projetada para execução local, não para exposição pública na internet.
+- Foi desenvolvida para utilização local.
+- O dashboard consulta até 1.000 alertas recentes.
+- Ainda não possui uma suíte de testes automatizados completa para as interações visuais.
+- As regras de detecção podem apresentar falsos positivos.
+- Não substitui um sistema SIEM profissional.
 
-As regras podem produzir falsos positivos e devem ser utilizadas como apoio à análise.
+## 📌 Melhorias futuras
 
-## Melhorias futuras
+Entre as possibilidades de evolução estão:
 
-- Novos formatos de logs.
+- Suporte a formatos adicionais de logs.
 - Novas regras de detecção.
 - Exportação de relatórios.
-- Ampliação dos testes de integração.
-- Otimização das consultas ao histórico.
-- Melhorias de acessibilidade e visualização.
-- Documentação adicional sobre arquitetura e segurança.
+- Testes automatizados de integração.
+- Otimização de consultas ao SQLite.
+- Novos indicadores de segurança.
+- Melhorias de visualização e acessibilidade.
+- Documentação de arquitetura.
+- Aprimoramento das regras de classificação de alertas.
 
-## Autor
+## 👨‍💻 Autor
 
 **Fernando Augusto Bueno Canquerini**
 
-Estudante de Tecnologia em Análise e Desenvolvimento de Sistemas — Universidade Federal do Paraná (UFPR).
+Estudante de Tecnologia em Análise e Desenvolvimento de Sistemas (TADS) na **Universidade Federal do Paraná (UFPR)**.
 
-GitHub: https://github.com/fernandoaugustobueno10-wq
+Tenho interesse em desenvolvimento de software, desenvolvimento backend, bancos de dados e segurança da informação.
+
+O LogGuard faz parte dos meus projetos pessoais de aprendizado e portfólio, reunindo conhecimentos de programação Python, análise de dados, persistência, desenvolvimento de interfaces e testes de software.
+
+**GitHub:** https://github.com/fernandoaugustobueno10-wq
 
 ---
 
-Projeto pessoal desenvolvido para aprendizado, experimentação e portfólio.
+**LogGuard — Projeto pessoal desenvolvido para aprendizado e portfólio.**
