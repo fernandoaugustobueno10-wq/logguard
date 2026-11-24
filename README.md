@@ -323,18 +323,21 @@ Quando o mesmo alerta é processado novamente, ele não é inserido outra vez no
 
 As operações utilizam consultas parametrizadas e transações SQLite.
 
+
 ## 🧪 Testes automatizados
 
-O LogGuard possui **39 testes automatizados**, organizados em três módulos:
+O LogGuard possui **60 testes automatizados**, organizados em cinco módulos:
 
 | Módulo | Testes | Finalidade |
 |---|---:|---|
 | `test_analisador.py` | 20 | Validação de CSV e regras de detecção |
 | `test_repositorio.py` | 10 | Persistência, consultas e duplicidade |
 | `test_painel.py` | 9 | Filtros, indicadores e dados dos gráficos |
-| **Total** | **39** | |
+| `test_integracao.py` | 11 | Fluxo completo de importação, detecção e SQLite |
+| `test_seguranca.py` | 10 | Limites, codificação e entradas malformadas |
+| **Total** | **60** | |
 
-Para executar a suíte completa:
+Para executar todos os testes:
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
@@ -343,12 +346,24 @@ Para executar a suíte completa:
 Resultado esperado:
 
 ```text
-Ran 39 tests
+Ran 60 tests
 
 OK
 ```
 
-Os testes abrangem cenários válidos e inválidos, incluindo endereços IP incorretos, datas sem fuso horário, parâmetros inválidos, eventos fora de ordem, duplicidade de registros e filtros do dashboard.
+### Auditoria de dependências
+
+O projeto utiliza `pip-audit` para verificar as dependências Python em busca de vulnerabilidades conhecidas.
+
+A auditoria pode ser executada localmente:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip_audit -r requirements.txt
+```
+
+No GitHub Actions, os testes funcionais e a auditoria são executados em jobs independentes.
+
+A ausência de vulnerabilidades conhecidas no relatório não garante que o projeto esteja livre de falhas de segurança.
 
 ## 🔄 Integração contínua
 

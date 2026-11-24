@@ -56,3 +56,85 @@ jobs:
           python main.py exemplos/eventos.csv --salvar
           python main.py exemplos/eventos.csv --salvar
           python main.py --historico
+
+name: Python Tests and Security
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Automated Tests - Python 3.13
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+
+      - name: Check Python syntax
+        run: |
+          python -m compileall -q main.py dashboard.py logguard tests
+
+      - name: Run automated tests
+        run: |
+          python -m unittest discover -s tests -v
+
+      - name: Test login detection
+        run: |
+          python main.py exemplos/eventos.csv
+
+      - name: Test HTTP anomaly detection
+        run: |
+          python main.py exemplos/eventos_http.csv
+
+      - name: Test SQLite persistence
+        run: |
+          python main.py exemplos/eventos.csv --salvar
+          python main.py exemplos/eventos.csv --salvar
+          python main.py --historico
+
+  dependency-audit:
+    name: Dependency Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install pip-audit
+        run: |
+          python -m pip install pip-audit==2.10.1
+
+      - name: Audit application dependencies
+        run: |
+          python -m pip_audit -r requirements.txt
